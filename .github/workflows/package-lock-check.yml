@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: connect-api root
-      run: cd connect-api
+      run: ls && cd connect-api
     - name: Checkout code
       uses: actions/checkout@v4
 
