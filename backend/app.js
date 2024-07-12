@@ -44,6 +44,26 @@ app.post('/api/describe', async (req, res) => {
     }
 })
 
+// POST /api/transform
+// Takes image description and creates a new image out of it.
+app.post('/api/transform', async (req, res) =>{
+    const description = req.body.imageDescription;
+    const style = req.body.imageStyle;
+    const imagePrompt = `Create an image in ${style} style that matches the following description:
+    ${description}`;
+
+    const transformedImage = await openai.images.generate({
+        model: "dall-e-3",
+        prompt: imagePrompt,
+    });
+
+    console.log("New image response: ", transformedImage);
+    const transformedImageURL = image.data[0].url;
+
+    // return image URL
+    return transformedImageURL
+});
+
 // parse out hosting port from cmd arguments if passed in
 // otherwise default to port 4242
 var port = (() => {
