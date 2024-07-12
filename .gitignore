@@ -7,3 +7,5 @@ yarn-error.log
 dist
 secrets.json
 **/*/db.json
+
+.env
