@@ -49,19 +49,19 @@ app.post('/api/describe', async (req, res) => {
 app.post('/api/transform', async (req, res) =>{
     const description = req.body.imageDescription;
     const style = req.body.imageStyle;
-    const imagePrompt = `Create an image in ${style} style that matches the following description:
-    ${description}`;
-
+    const imagePrompt = `Create an image that matches the following description:
+    ${description}. The image is created in a(n) ${style} style.`;
+    // console.log("Original prompt", imagePrompt);
     const transformedImage = await openai.images.generate({
         model: "dall-e-3",
+        style: "vivid",
         prompt: imagePrompt,
     });
 
-    console.log("New image response: ", transformedImage);
-    const transformedImageURL = image.data[0].url;
+    // console.log("New image response: ", transformedImage);
 
     // return image URL
-    return transformedImageURL
+    res.json(transformedImage);
 });
 
 // parse out hosting port from cmd arguments if passed in
