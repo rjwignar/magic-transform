@@ -2,6 +2,7 @@ import "dotenv/config.js";
 import express from "express";
 import OpenAI from "openai";
 import cors from "cors";
+import { argv } from 'node:process';
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -36,8 +37,27 @@ app.post('/api/describe', async (req, res) => {
         });
 
         console.log(response);
+        res.json(response);
     }
     catch(err){
         console.log("Error in app.js", err);
     }
 })
+
+// parse out hosting port from cmd arguments if passed in
+// otherwise default to port 4242
+var port = (() => {
+    var port = 4242; // default
+    if (argv) {
+        argv.forEach((v, i) => {
+            if (v && (v.toLowerCase().startsWith('port='))) {
+                port = v.substring(5);
+            }
+        });
+    }
+    return port;
+})();
+
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+});
