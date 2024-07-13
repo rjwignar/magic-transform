@@ -15,7 +15,7 @@ export const App = () => {
 
 	const uploadExternalImage = () => {
 		return upload({
-			mimeType: "image/jpeg",
+			mimeType: "image/png",
 			thumbnailUrl: receivedImage,
 			type: "IMAGE",
 			url: receivedImage,
