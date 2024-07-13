@@ -90,6 +90,20 @@ export const App = () => {
 		// Save image description
 		const imageDescription = response.choices[0].message.content;
 		console.log("description", imageDescription);
+		let imageStyle = "oil-painting";
+		// Pass description and art style to POST /api/transform
+		res = await fetch("http://localhost:4242/api/transform", {
+			method: "POST",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			body: JSON.stringify({
+				imageDescription: imageDescription,
+				imageStyle: imageStyle,
+			})
+		});
+		response = await res.json();
+		console.log(response);
 	
 		// Pretend this awaited and received something from the AI
 		setReceivedImage(
