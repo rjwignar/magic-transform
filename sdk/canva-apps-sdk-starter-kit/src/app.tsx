@@ -74,6 +74,23 @@ export const App = () => {
 	const postImageURL = async (url: string) => {
 		// Pretend this posted the url to
 		console.log("postImageURL called with image URL: " + url);
+		// call /api/describe
+		let res = await fetch("http://localhost:4242/api/describe", {
+			method: "POST",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			body: JSON.stringify({
+				imageURL: url,
+			})
+		});
+		let response = await res.json();
+		console.log(response);
+
+		// Save image description
+		const imageDescription = response.choices[0].message.content;
+		console.log("description", imageDescription);
+	
 		// Pretend this awaited and received something from the AI
 		setReceivedImage(
 			"https://oaidalleapiprodscus.blob.core.windows.net/private/org-MEVmK2uiLdmnkIX28J7umA5X/user-HDtlaQcpH4UVwTWQPRji59XQ/img-gLbPv89WuQwu6DquNg7WKVdI.png?st=2024-07-12T18%3A59%3A13Z&se=2024-07-12T20%3A59%3A13Z&sp=r&sv=2023-11-03&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-07-12T19%3A49%3A38Z&ske=2024-07-13T19%3A49%3A38Z&sks=b&skv=2023-11-03&sig=1Nl70EfHs%2BHYHrZ9v6l%2B1g1fzcx6Nb7Thd59NCWEVRo%3D"
