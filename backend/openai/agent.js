@@ -32,6 +32,7 @@ export async function transformImage(imagePrompt){
         model: "dall-e-3",
         style: "vivid",
         prompt: imagePrompt,
+        response_format: "b64_json",
     });
 
     return res;
