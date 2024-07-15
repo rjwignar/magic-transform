@@ -29,12 +29,19 @@ app.post('/api/describe', async (req, res) => {
 app.post('/api/transform', async (req, res) =>{
     const description = req.body.imageDescription;
     const style = req.body.imageStyle;
+    const aspectRatio = req.body.imageAspectRatio;
+    const aspectRatioSizes = new Map([
+        ['square', '1024x1024'],
+        ['landscape', '1792x1024'],
+        ['portrait', '1024x1792']
+    ]);
+    const imageSize = aspectRatioSizes.get(aspectRatio);
     const imagePrompt = `Create an image that matches the following description:
     ${description}. The image is created in a(n) ${style} style.`;
     // console.log("Original prompt", imagePrompt);
 
     // Pass imagePrompt to OpenAI DALL-E-3
-    const transformedImage = await transformImage(imagePrompt);
+    const transformedImage = await transformImage(imagePrompt, imageSize);
     // console.log("New image response: ", transformedImage);
 
     // return image URL
