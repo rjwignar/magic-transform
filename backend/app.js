@@ -30,7 +30,10 @@ app.post('/api/transform', async (req, res) =>{
     const description = req.body.imageDescription;
     const style = req.body.imageStyle;
     const imagePrompt = `Create an image that matches the following description:
-    ${description}. The image is created in a(n) ${style} style.`;
+    ${description}.`;
+    if (style) {
+        imagePrompt += `The image is created in a(n) ${style} style.`
+    }
     // console.log("Original prompt", imagePrompt);
 
     // Pass imagePrompt to OpenAI DALL-E-3
