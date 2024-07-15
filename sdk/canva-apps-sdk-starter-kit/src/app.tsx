@@ -8,7 +8,7 @@ import {
 } from "@canva/app-ui-kit";
 import type { ExportResponse } from "@canva/design";
 import { requestExport } from "@canva/design";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "styles/components.css";
 import { upload } from "@canva/asset";
 import { addNativeElement, ui } from "@canva/design";
@@ -21,7 +21,6 @@ export const App = () => {
 	const [receivedImage, setReceivedImage] = useState("");
 
 	// Use this state as a prompt to send to the AI to control the style of the generated image.
-	// Will need to convert simplified values into an actual prompt (e.g. 'cartoonSwitch' into 'Cartoon Style' for the AI prompt)
 	const [enabledSwitch, setEnabledSwitch] = useState("cartoonSwitch");
 
 	// Uploads image to Canva's 'Uploads' library for the user's future use
@@ -104,7 +103,7 @@ export const App = () => {
 		// Save image description
 		const imageDescription = response.choices[0].message.content;
 		console.log("description", imageDescription);
-		let imageStyle = "oil-painting";
+		const imageStyle = enabledSwitch;
 		// Pass description and art style to POST /api/transform
 		res = await fetch("http://localhost:4242/api/transform", {
 			method: "POST",
@@ -147,25 +146,22 @@ export const App = () => {
 				</Text>
 				<Title size="medium">Transformation Styles</Title>
 				<Switch
-					id="cartoonSwitch"
-					value={enabledSwitch === "cartoonSwitch"}
+					value={enabledSwitch === "cartoon"}
 					label="Cartoon-y"
 					description="A style the kids will love. Perfect for kids books!"
-					onChange={() => setEnabledSwitch("cartoonSwitch")}
+					onChange={() => setEnabledSwitch("cartoon")}
 				/>
 				<Switch
-					id="paintingSwitch"
-					value={enabledSwitch === "paintingSwitch"}
+					value={enabledSwitch === "oil-painting"}
 					label="Oil Painting"
 					description="Fancy~! Might want to hang this on the wall after."
-					onChange={() => setEnabledSwitch("paintingSwitch")}
+					onChange={() => setEnabledSwitch("oil-painting")}
 				/>
 				<Switch
-					id="sketchSwitch"
-					value={enabledSwitch === "sketchSwitch"}
+					value={enabledSwitch === "simple-pencil-sketch"}
 					label="Pencil Sketch"
 					description="Want to practice drawing? Get an idea by tracing the image out."
-					onChange={() => setEnabledSwitch("sketchSwitch")}
+					onChange={() => setEnabledSwitch("simple-pencil-sketch")}
 				/>
 				<br></br>
 				<Button
