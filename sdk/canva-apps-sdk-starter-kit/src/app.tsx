@@ -8,7 +8,7 @@ import {
 } from "@canva/app-ui-kit";
 import type { ExportResponse } from "@canva/design";
 import { requestExport } from "@canva/design";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "styles/components.css";
 import { upload } from "@canva/asset";
 import { addNativeElement, ui } from "@canva/design";
