@@ -29,7 +29,7 @@ app.post('/api/describe', async (req, res) => {
 app.post('/api/transform', async (req, res) =>{
     const description = req.body.imageDescription;
     const style = req.body.imageStyle;
-    const imagePrompt = `Create an image that matches the following description:
+    let imagePrompt = `Create an image that matches the following description:
     ${description}.`;
     if (style) {
         imagePrompt += `The image is created in a(n) ${style} style.`
