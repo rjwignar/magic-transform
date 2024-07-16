@@ -1,4 +1,11 @@
-import { Button, Rows, Text, Title, ImageCard } from "@canva/app-ui-kit";
+import {
+	Button,
+	Rows,
+	Text,
+	Title,
+	ImageCard,
+	Switch,
+} from "@canva/app-ui-kit";
 import type { ExportResponse } from "@canva/design";
 import { requestExport } from "@canva/design";
 import { useState } from "react";
@@ -13,6 +20,10 @@ export const App = () => {
 	>();
 	const [receivedImage, setReceivedImage] = useState("");
 
+	// Use this state as a prompt to send to the AI to control the style of the generated image.
+	const [enabledSwitch, setEnabledSwitch] = useState("");
+
+	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
 		return upload({
 			mimeType: "image/png",
@@ -24,11 +35,13 @@ export const App = () => {
 		});
 	};
 
+	// Adds selected image to Canva's current page as an element
 	const insertExternalImage = async () => {
 		const { ref } = await uploadExternalImage();
 		await addNativeElement({ type: "IMAGE", ref });
 	};
 
+	// Adds functionality to upload dragged image to Canva's 'Uploads' library
 	const onDragStartForExternalImage = (event: React.DragEvent<HTMLElement>) => {
 		ui.startDrag(event, {
 			type: "IMAGE",
@@ -77,12 +90,12 @@ export const App = () => {
 		// call /api/describe
 		let res = await fetch("http://localhost:4242/api/describe", {
 			method: "POST",
-			headers : {
-				"Content-Type" : "application/json"
+			headers: {
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				imageURL: url,
-			})
+			}),
 		});
 		let response = await res.json();
 		console.log(response);
@@ -90,21 +103,21 @@ export const App = () => {
 		// Save image description
 		const imageDescription = response.choices[0].message.content;
 		console.log("description", imageDescription);
-		let imageStyle = "oil-painting";
+		const imageStyle = enabledSwitch;
 		// Pass description and art style to POST /api/transform
 		res = await fetch("http://localhost:4242/api/transform", {
 			method: "POST",
-			headers : {
-				"Content-Type" : "application/json"
+			headers: {
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				imageDescription: imageDescription,
 				imageStyle: imageStyle,
-			})
+			}),
 		});
 		response = await res.json();
 		console.log(response);
-	
+
 		// Pretend this awaited and received something from the AI
 		const base64JsonString = response.data[0].b64_json;
 		console.log(base64JsonString);
@@ -123,26 +136,48 @@ export const App = () => {
 		});
 	};
 
-	// This should handle fetching the AI generated image from the backend AI API
-	const fetchGeneratedImage = async () => {};
-
 	return (
 		<div className={styles.scrollContainer}>
 			<Rows spacing="1u">
-				<Title size="small">Export</Title>
-				<Text>This example demonstrates how apps can export designs.</Text>
+				<Title size="large">Canvas-To-AI</Title>
+				<Text>
+					Turn your imagination into beautiful artwork. Drag Canva elements onto
+					the page that capture your idea, and let us handle the rest.
+				</Text>
+				<Title size="medium">Transformation Styles</Title>
+				<Switch
+					value={enabledSwitch === ""}
+					label="No style"
+					description="We'll take it from here."
+					onChange={() => setEnabledSwitch("")}
+				/>
+				<Switch
+					value={enabledSwitch === "cartoon"}
+					label="Cartoon-y"
+					description="A style the kids will love. Perfect for kids books!"
+					onChange={() => setEnabledSwitch("cartoon")}
+				/>
+				<Switch
+					value={enabledSwitch === "oil-painting"}
+					label="Oil Painting"
+					description="Fancy~! Might want to hang this on the wall after."
+					onChange={() => setEnabledSwitch("oil-painting")}
+				/>
+				<Switch
+					value={enabledSwitch === "simple-pencil-sketch"}
+					label="Pencil Sketch"
+					description="Want to practice drawing? Get an idea by tracing the image out."
+					onChange={() => setEnabledSwitch("simple-pencil-sketch")}
+				/>
+				<br></br>
 				<Button
 					variant="primary"
 					onClick={exportDocument}
 					loading={state === "exporting"}
 				>
-					Export
+					Transform
 				</Button>
 			</Rows>
-
-			<br></br>
-			<br></br>
-			<br></br>
 
 			{receivedImage !== "" && (
 				<Rows spacing="1u">
