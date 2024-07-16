@@ -55,7 +55,11 @@ app.post('/api/transform', async (req, res) =>{
     }
     else if (process.env.NODE_ENV === 'production'){
         // Pass imagePrompt to OpenAI DALL-E-3
+<<<<<<< HEAD
         transformedImage = await transformImage(imagePrompt, imageSize);
+=======
+        transformedImage = await transformImage(imagePrompt);
+>>>>>>> 42a413c (added test responses to POST /api/transform and POST/api/describe routes)
     }
     // console.log("New image response: ", transformedImage);
 
