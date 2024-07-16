@@ -21,7 +21,7 @@ export const App = () => {
 	const [receivedImage, setReceivedImage] = useState("");
 
 	// Use this state as a prompt to send to the AI to control the style of the generated image.
-	const [enabledSwitch, setEnabledSwitch] = useState("cartoonSwitch");
+	const [enabledSwitch, setEnabledSwitch] = useState("");
 
 	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
@@ -145,6 +145,12 @@ export const App = () => {
 					the page that capture your idea, and let us handle the rest.
 				</Text>
 				<Title size="medium">Transformation Styles</Title>
+				<Switch
+					value={enabledSwitch === ""}
+					label="No style"
+					description="We'll take it from here."
+					onChange={() => setEnabledSwitch("")}
+				/>
 				<Switch
 					value={enabledSwitch === "cartoon"}
 					label="Cartoon-y"
