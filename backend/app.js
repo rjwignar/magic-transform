@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { argv } from 'node:process';
 import { describeImage, transformImage } from "./openai/agent.js";
+import { readFileSync } from "node:fs";
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -12,10 +13,15 @@ app.post('/api/describe', async (req, res) => {
     try {
         // const imageURL = `https://www.shutterstock.com/shutterstock/photos/2292916287/display_1500/stock-photo-two-business-people-a-business-man-and-a-business-woman-engage-in-a-discussion-as-they-read-a-2292916287.jpg`;
         const imageURL = req.body.imageURL;
-
-        // Pass imageURL to OpenAI Omni (GPT-4o)
-        const response = await describeImage(imageURL);
-
+        let response;
+        if (process.env.NODE_ENV === 'test'){
+            // Return sample response
+            response = JSON.parse(readFileSync('samples/describeSample.json'));
+        }
+        else if (process.env.NODE_ENV === 'production'){
+            // Pass imageURL to OpenAI Omni (GPT-4o)
+            response = await describeImage(imageURL);
+        }
         // console.log(response);
         res.json(response);
     }
@@ -42,9 +48,15 @@ app.post('/api/transform', async (req, res) =>{
         imagePrompt += `The image is created in a(n) ${style} style.`
     }
     // console.log("Original prompt", imagePrompt);
-
-    // Pass imagePrompt to OpenAI DALL-E-3
-    const transformedImage = await transformImage(imagePrompt, imageSize);
+    let transformedImage;
+    if (process.env.NODE_ENV === 'test'){
+        // Return sample response
+        transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
+    }
+    else if (process.env.NODE_ENV === 'production'){
+        // Pass imagePrompt to OpenAI DALL-E-3
+        transformedImage = await transformImage(imagePrompt, imageSize);
+    }
     // console.log("New image response: ", transformedImage);
 
     // return image URL
