@@ -27,10 +27,11 @@ export async function describeImage(imageURL){
     return res;
 }
 
-export async function transformImage(imagePrompt){
+export async function transformImage(imagePrompt, imageSize){
     const res = await openai.images.generate({
         model: "dall-e-3",
         style: "vivid",
+        size: imageSize,
         prompt: imagePrompt,
         response_format: "b64_json",
     });
