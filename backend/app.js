@@ -36,7 +36,7 @@ app.post('/api/transform', async (req, res) =>{
         ['portrait', '1024x1792']
     ]);
     const imageSize = aspectRatioSizes.get(aspectRatio);
-    const imagePrompt = `Create an image that matches the following description:
+    let imagePrompt = `Create an image that matches the following description:
     ${description}.`;
     if (style) {
         imagePrompt += `The image is created in a(n) ${style} style.`
