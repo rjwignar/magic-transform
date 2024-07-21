@@ -23,6 +23,9 @@ export const App = () => {
 	// Use this state as a prompt to send to the AI to control the style of the generated image.
 	const [enabledSwitch, setEnabledSwitch] = useState("");
 
+	// State for tracking selected aspect ratio
+	const [imageAspectRatio, setImageAspectRatio] = useState("square");
+
 	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
 		return upload({
@@ -113,6 +116,7 @@ export const App = () => {
 			body: JSON.stringify({
 				imageDescription: imageDescription,
 				imageStyle: imageStyle,
+				imageAspectRatio: imageAspectRatio,
 			}),
 		});
 		response = await res.json();
@@ -169,7 +173,27 @@ export const App = () => {
 					description="Want to practice drawing? Get an idea by tracing the image out."
 					onChange={() => setEnabledSwitch("simple-pencil-sketch")}
 				/>
-				<br></br>
+
+				<Title size="medium">Aspect Ratio</Title>
+				<Switch
+					value={imageAspectRatio === "square"}
+					label="Square"
+					description="1024 x 1024"
+					onChange={() => setImageAspectRatio("square")}
+				/>
+				<Switch
+					value={imageAspectRatio === "landscape"}
+					label="Landscape"
+					description="1792 x 1024"
+					onChange={() => setImageAspectRatio("landscape")}
+				/>
+				<Switch
+					value={imageAspectRatio === "portrait"}
+					label="Portrait"
+					description="1024 x 1792"
+					onChange={() => setImageAspectRatio("portrait")}
+				/>
+
 				<Button
 					variant="primary"
 					onClick={exportDocument}
