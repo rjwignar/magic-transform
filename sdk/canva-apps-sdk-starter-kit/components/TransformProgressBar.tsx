@@ -5,11 +5,11 @@ import React from "react";
 const INTERVAL_DURATION_MS = 100;
 const TOTAL_PROGRESS_PERCENTAGE = 100;
 
-export const TransformProgressBar = ({
+export default function TransformProgressBar ({
     duration,
 }: {
     duration: number;
-}) => {
+}) {
     const [progress, setProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
