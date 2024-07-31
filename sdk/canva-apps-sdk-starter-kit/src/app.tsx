@@ -31,7 +31,6 @@ export const App = () => {
 
 	// Used for ensuring progress bar fills completely before disappearing
 	let timeoutId: undefined | ReturnType<typeof setTimeout>;
-	let isTimeoutSet = false;
 	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
 		return upload({
@@ -95,9 +94,11 @@ export const App = () => {
 	// This should handle sending the exported image URL to the backend AI API
 	const postImageURL = async (url: string) => {
 
-		if (isTimeoutSet) {
-			clearTimeout(timeoutId);
-		  }
+		// Reset received image
+		clearTimeout(timeoutId);
+		setReceivedImage("");
+		// setTransformJobComplete(false);
+
 		// Pretend this posted the url to
 		console.log("postImageURL called with image URL: " + url);
 		// call /api/describe
@@ -143,7 +144,6 @@ export const App = () => {
 			setReceivedImage(transformedImage.src);
 			console.log("Delaying image url assignment");
 		}, 1000);
-		isTimeoutSet = true;
 		// setReceivedImage(response.data[0].url);
 		const image = await upload({
 			type: "IMAGE",
