@@ -6,9 +6,10 @@ const INTERVAL_DURATION_MS = 100;
 const TOTAL_PROGRESS_PERCENTAGE = 100;
 
 export default function TransformProgressBar ({
-    duration,
+    duration, transformJobComplete
 }: {
-    duration: number;
+    duration: number,
+    transformJobComplete: boolean;
 }) {
     const [progress, setProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +24,7 @@ export default function TransformProgressBar ({
             let progress = 0;
             const totalSteps = (duration * 1000) / INTERVAL_DURATION_MS;
 
+            if (transformJobComplete) setIsLoading(false);
             if (loading) {
                 intervalId = window.setInterval(() =>{
                     progress += TOTAL_PROGRESS_PERCENTAGE / totalSteps;
@@ -58,7 +60,7 @@ export default function TransformProgressBar ({
             clearLoadingProgress();
             clearTimeout(timeoutId);
         };
-    }, [duration, isLoading]);
+    }, [duration, transformJobComplete, isLoading]);
 
     if (isLoading){
         return (
@@ -67,6 +69,11 @@ export default function TransformProgressBar ({
             ariaLabel={"loading progress bar"}
             />
         );
+    } else{
+        return (
+            <ProgressBar
+            value={100}
+            ariaLabel={"loading progress bar"}/>
+        )
     }
-    return <Text>Finished Loading</Text>
 }
