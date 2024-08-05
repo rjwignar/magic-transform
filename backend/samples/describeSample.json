@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-9kFgaTkpdbkd5LAMkzZqqabSQBvGV",
+  "object": "chat.completion",
+  "created": 1720810412,
+  "model": "gpt-4o-2024-05-13",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "This image features two people, a man and a woman, standing in a modern office environment. They appear to be engaged in a discussion while looking at a document or folder that the man is holding. Both individuals are wearing eyeglasses and casual business attire. The background shows a sleek, contemporary design with large windows and a unique, spiral-shaped light fixture hanging from the ceiling. A glass railing is visible in the foreground. The overall setting suggests a professional yet stylish workspace."
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1120,
+    "completion_tokens": 95,
+    "total_tokens": 1215
+  },
+  "system_fingerprint": "fp_298125635f"
+}
