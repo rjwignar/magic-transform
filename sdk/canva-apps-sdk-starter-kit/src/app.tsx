@@ -157,66 +157,66 @@ export const App = () => {
 
 	return (
 		<div className={styles.scrollContainer}>
-			<Rows spacing="1u">
-				<Title size="large">Canvas-To-AI</Title>
-				<Text>
-					Turn your imagination into beautiful artwork. Drag Canva elements onto
-					the page that capture your idea, and let us handle the rest.
-				</Text>
-				<Title size="medium">Transformation Styles</Title>
-				<Switch
-					value={enabledSwitch === ""}
-					label="No style"
-					description="We'll take it from here."
-					onChange={() => setEnabledSwitch("")}
-				/>
-				<Switch
-					value={enabledSwitch === "cartoon"}
-					label="Cartoon-y"
-					description="A style the kids will love. Perfect for kids books!"
-					onChange={() => setEnabledSwitch("cartoon")}
-				/>
-				<Switch
-					value={enabledSwitch === "oil-painting"}
-					label="Oil Painting"
-					description="Fancy~! Might want to hang this on the wall after."
-					onChange={() => setEnabledSwitch("oil-painting")}
-				/>
-				<Switch
-					value={enabledSwitch === "simple-pencil-sketch"}
-					label="Pencil Sketch"
-					description="Want to practice drawing? Get an idea by tracing the image out."
-					onChange={() => setEnabledSwitch("simple-pencil-sketch")}
-				/>
-
-				<Title size="medium">Aspect Ratio</Title>
-				<Switch
-					value={imageAspectRatio === "square"}
-					label="Square"
-					description="1024 x 1024"
-					onChange={() => setImageAspectRatio("square")}
-				/>
-				<Switch
-					value={imageAspectRatio === "landscape"}
-					label="Landscape"
-					description="1792 x 1024"
-					onChange={() => setImageAspectRatio("landscape")}
-				/>
-				<Switch
-					value={imageAspectRatio === "portrait"}
-					label="Portrait"
-					description="1024 x 1792"
-					onChange={() => setImageAspectRatio("portrait")}
-				/>
-
-				<Button
-					variant="primary"
-					onClick={exportDocument}
-					loading={state === "exporting"}
-				>
-					Transform
-				</Button>
-			</Rows>
+						<Rows spacing="1u">
+						<Title size="large">Canvas-To-AI</Title>
+						<Text>
+							Turn your imagination into beautiful artwork. Drag Canva elements onto
+							the page that capture your idea, and let us handle the rest.
+						</Text>
+						<Title size="medium">Transformation Styles</Title>
+						<Switch
+							value={enabledSwitch === ""}
+							label="No style"
+							description="We'll take it from here."
+							onChange={() => setEnabledSwitch("")}
+						/>
+						<Switch
+							value={enabledSwitch === "cartoon"}
+							label="Cartoon-y"
+							description="A style the kids will love. Perfect for kids books!"
+							onChange={() => setEnabledSwitch("cartoon")}
+						/>
+						<Switch
+							value={enabledSwitch === "oil-painting"}
+							label="Oil Painting"
+							description="Fancy~! Might want to hang this on the wall after."
+							onChange={() => setEnabledSwitch("oil-painting")}
+						/>
+						<Switch
+							value={enabledSwitch === "simple-pencil-sketch"}
+							label="Pencil Sketch"
+							description="Want to practice drawing? Get an idea by tracing the image out."
+							onChange={() => setEnabledSwitch("simple-pencil-sketch")}
+						/>
+		
+						<Title size="medium">Aspect Ratio</Title>
+						<Switch
+							value={imageAspectRatio === "square"}
+							label="Square"
+							description="1024 x 1024"
+							onChange={() => setImageAspectRatio("square")}
+						/>
+						<Switch
+							value={imageAspectRatio === "landscape"}
+							label="Landscape"
+							description="1792 x 1024"
+							onChange={() => setImageAspectRatio("landscape")}
+						/>
+						<Switch
+							value={imageAspectRatio === "portrait"}
+							label="Portrait"
+							description="1024 x 1792"
+							onChange={() => setImageAspectRatio("portrait")}
+						/>
+		
+						<Button
+							variant="primary"
+							onClick={exportDocument}
+							loading={state === "exporting"}
+						>
+							Transform
+						</Button>
+					</Rows>
 			{exportResponse && receivedImage==="" ? <TransformProgressBar duration={10} transformJobComplete={transformJobComplete}></TransformProgressBar> : null}
 			{receivedImage !== "" && (
 				<Rows spacing="1u">
@@ -236,7 +236,7 @@ export const App = () => {
 						onClick={insertExternalImage}
 						onDragStart={onDragStartForExternalImage}
 					/>
-					<Text>{receivedImage}</Text>
+					{/* <Text>{receivedImage}</Text> */}
 				</Rows>
 			)}
 		</div>
