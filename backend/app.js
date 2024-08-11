@@ -7,6 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Health probe endpoint
+app.get('/', (req, res) => {
+    res.send({ "status": "ready" });
+});
+
 // Takes image URL and describes 
 // POST /api/describe
 app.post('/api/describe', async (req, res) => {
