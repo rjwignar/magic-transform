@@ -369,23 +369,22 @@ export const App = () => {
 			)}
 
 			{exportResponse && receivedImage === "" ? (
-				<TransformProgressBar
-					duration={10}
-					transformJobComplete={transformJobComplete}
-				></TransformProgressBar>
+				<div>
+					<Title>Transforming your image.</Title>
+					<TransformProgressBar
+						duration={30}
+						transformJobComplete={transformJobComplete}
+					></TransformProgressBar>
+					<Text size="large">
+						Please wait. More complex images may take longer.
+					</Text>
+				</div>
 			) : null}
 
 			{receivedImage !== "" && transformJobComplete === true && (
 				<Rows spacing="1u">
 					<Title size="small">External Image</Title>
-					<Text>
-						This example demonstrates how apps can support drag-and-drop of
-						images.
-					</Text>
-					<Text size="small" tone="tertiary">
-						This image is an external https image made draggable via drag and
-						drop and asset upload.
-					</Text>
+
 					<ImageCard
 						ariaLabel="Add image to design"
 						alt="grass image"
