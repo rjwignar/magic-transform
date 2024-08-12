@@ -8,11 +8,14 @@ const openai = new OpenAI({
 export async function describeImage(imageURL){
     const res = await openai.chat.completions.create({
         model: "gpt-4o",
+        max_tokens: 200,
         messages: [
             {
                 role: "user",
                 content: [
-                    { type: "text", text: "Can you describe what's in this image?" },
+                    { type: "text", text: `Return a description of this image that can be used to accurately recreate the image. 
+                        Do not include references to any style the image might have.
+                        Start your description with 'The image depicts'` },
                     {
                         type: "image_url",
                         image_url: {
