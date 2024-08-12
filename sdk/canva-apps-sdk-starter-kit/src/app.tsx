@@ -96,6 +96,10 @@ export const App = () => {
 			if (response.status === "COMPLETED") {
 				postImageURL(response.exportBlobs[0].url);
 			}
+			if (response.status === "ABORTED") {
+				setExportResponse(undefined);
+				setShowMenu(true);
+			}
 		} catch (error) {
 			// TODO: Add error handling
 			console.log(error);
