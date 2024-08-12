@@ -24,6 +24,12 @@ import nostyle from "assets/images/nostyle.png";
 import square from "assets/images/square.png";
 import landscape from "assets/images/landscape.png";
 import portrait from "assets/images/portrait.png";
+import papercut from "assets/images/papercutTransformation.png";
+import psychedelic from "assets/images/psychedelicTransformation.png";
+import stainedGlass from "assets/images/stainedGlassTransformation.png";
+import retrowave from "assets/images/synthwaveTransformation.png";
+import threeD from "assets/images/threeDimensionalTransformation.png";
+import woodblock from "assets/images/woodBlockPrintTransformation.png";
 
 const backendHost = BACKEND_HOST || "http://localhost:4242";
 export const App = () => {
@@ -40,22 +46,23 @@ export const App = () => {
 	const [imageAspectRatio, setImageAspectRatio] = useState("square");
 	// State for hiding and showing creation menu and options
 	const [showMenu, setShowMenu] = useState(true);
+	var width, height;
+	if (imageAspectRatio === "square") {
+		width = 1024;
+		height = 1024;
+	} else if (imageAspectRatio === "landscape") {
+		width = 1792;
+		height = 1024;
+	} else if (imageAspectRatio === "portrait") {
+		width = 1024;
+		height = 1792;
+	}
+	const [showMoreStyles, setShowMoreStyles] = useState(false);
 
 	// Used for ensuring progress bar fills completely before disappearing
 	let timeoutId: undefined | ReturnType<typeof setTimeout>;
 	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
-		var width, height;
-		if (imageAspectRatio === "square") {
-			width = 1024;
-			height = 1024;
-		} else if (imageAspectRatio === "landscape") {
-			width = 1792;
-			height = 1024;
-		} else if (imageAspectRatio === "portrait") {
-			width = 1024;
-			height = 1792;
-		}
 		return upload({
 			mimeType: "image/png",
 			thumbnailUrl: receivedImage,
@@ -74,17 +81,6 @@ export const App = () => {
 
 	// Adds functionality to upload dragged image to Canva's 'Uploads' library
 	const onDragStartForExternalImage = (event: React.DragEvent<HTMLElement>) => {
-		var width, height;
-		if (imageAspectRatio === "square") {
-			width = 1024;
-			height = 1024;
-		} else if (imageAspectRatio === "landscape") {
-			width = 1792;
-			height = 1024;
-		} else if (imageAspectRatio === "portrait") {
-			width = 1024;
-			height = 1792;
-		}
 		ui.startDrag(event, {
 			type: "IMAGE",
 			resolveImageRef: uploadExternalImage,
@@ -185,17 +181,6 @@ export const App = () => {
 			console.log("Delaying image url assignment");
 		}, 1000);
 		// setReceivedImage(response.data[0].url);
-		var width, height;
-		if (imageAspectRatio === "square") {
-			width = 1024;
-			height = 1024;
-		} else if (imageAspectRatio === "landscape") {
-			width = 1792;
-			height = 1024;
-		} else if (imageAspectRatio === "portrait") {
-			width = 1024;
-			height = 1792;
-		}
 		const image = await upload({
 			type: "IMAGE",
 			mimeType: "image/png",
@@ -205,8 +190,6 @@ export const App = () => {
 			height: height,
 		});
 	};
-
-	const showCreate = () => {};
 
 	return (
 		<div className={styles.scrollContainer}>
@@ -278,6 +261,68 @@ export const App = () => {
 						<Title size="xsmall">Realistic</Title>
 						<Title size="xsmall">Pencil Sketch</Title>
 						<Title size="xsmall">Anime</Title>
+
+						<ImageCard
+							ariaLabel="Retrowave image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("retrowave")}
+							selectable={true}
+							selected={enabledSwitch === "retrowave"}
+							thumbnailHeight={96}
+							thumbnailUrl={retrowave}
+						/>
+						<ImageCard
+							ariaLabel="Papercut image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("papercut")}
+							selectable={true}
+							selected={enabledSwitch === "papercut"}
+							thumbnailHeight={96}
+							thumbnailUrl={papercut}
+						/>
+						<ImageCard
+							ariaLabel="Woodblock print image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("wood-block print")}
+							selectable={true}
+							selected={enabledSwitch === "wood-block print"}
+							thumbnailHeight={96}
+							thumbnailUrl={woodblock}
+						/>
+						<Title size="xsmall">Retrowave</Title>
+						<Title size="xsmall">Papercut</Title>
+						<Title size="xsmall">Wood-Block</Title>
+
+						<ImageCard
+							ariaLabel="Stained glass image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("stained glass")}
+							selectable={true}
+							selected={enabledSwitch === "stained glass"}
+							thumbnailHeight={96}
+							thumbnailUrl={stainedGlass}
+						/>
+						<ImageCard
+							ariaLabel="Psychedelic image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("psychedelic")}
+							selectable={true}
+							selected={enabledSwitch === "psychedelic"}
+							thumbnailHeight={96}
+							thumbnailUrl={psychedelic}
+						/>
+						<ImageCard
+							ariaLabel="3D image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("three dimensional")}
+							selectable={true}
+							selected={enabledSwitch === "three dimensional"}
+							thumbnailHeight={96}
+							thumbnailUrl={threeD}
+						/>
+						<Title size="xsmall">Stained Glass</Title>
+						<Title size="xsmall">Psychedelic</Title>
+						<Title size="xsmall">3D</Title>
 					</Grid>
 
 					<Title size="medium">Aspect Ratio</Title>
@@ -329,6 +374,7 @@ export const App = () => {
 					transformJobComplete={transformJobComplete}
 				></TransformProgressBar>
 			) : null}
+
 			{receivedImage !== "" && transformJobComplete === true && (
 				<Rows spacing="1u">
 					<Title size="small">External Image</Title>
