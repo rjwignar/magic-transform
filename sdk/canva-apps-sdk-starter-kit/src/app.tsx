@@ -5,6 +5,8 @@ import {
 	Title,
 	ImageCard,
 	Switch,
+	Grid,
+	Box,
 } from "@canva/app-ui-kit";
 import type { ExportResponse } from "@canva/design";
 import { requestExport } from "@canva/design";
@@ -13,6 +15,15 @@ import styles from "styles/components.css";
 import { upload } from "@canva/asset";
 import { addNativeElement, ui } from "@canva/design";
 import TransformProgressBar from "../components/TransformProgressBar";
+import cartoon from "assets/images/cartoonTransformation.png";
+import oilpaint from "assets/images/oilPaintingTransformation.png";
+import realistic from "assets/images/photorealisticTransformation.png";
+import pencil from "assets/images/pencilSketchTransformation.png";
+import anime from "assets/images/ninetiesAnimeTransformation.png";
+import nostyle from "assets/images/nostyle.png";
+import square from "assets/images/square.png";
+import landscape from "assets/images/landscape.png";
+import portrait from "assets/images/portrait.png";
 
 const backendHost = BACKEND_HOST || "http://localhost:4242";
 export const App = () => {
@@ -21,14 +32,14 @@ export const App = () => {
 		ExportResponse | undefined
 	>();
 	const [receivedImage, setReceivedImage] = useState("");
-
 	// Use this state to notify TransformProgressBar when image transformation job is complete
 	const [transformJobComplete, setTransformJobComplete] = useState(false);
 	// Use this state as a prompt to send to the AI to control the style of the generated image.
 	const [enabledSwitch, setEnabledSwitch] = useState("");
-
 	// State for tracking selected aspect ratio
 	const [imageAspectRatio, setImageAspectRatio] = useState("square");
+	// State for hiding and showing creation menu and options
+	const [showMenu, setShowMenu] = useState(true);
 
 	// Used for ensuring progress bar fills completely before disappearing
 	let timeoutId: undefined | ReturnType<typeof setTimeout>;
@@ -72,6 +83,7 @@ export const App = () => {
 		if (state === "exporting") return;
 		try {
 			setState("exporting");
+			setShowMenu(false);
 			const response = await requestExport({
 				acceptedFileTypes: ["PNG"],
 			});
@@ -94,7 +106,6 @@ export const App = () => {
 
 	// This should handle sending the exported image URL to the backend AI API
 	const postImageURL = async (url: string) => {
-
 		// Reset received image
 		clearTimeout(timeoutId);
 		setReceivedImage("");
@@ -139,9 +150,11 @@ export const App = () => {
 		const base64JsonString = response.data[0].b64_json;
 		console.log(base64JsonString);
 		let transformedImage = new Image();
-		transformedImage.src = base64JsonString ? `data:image/png;base64,${base64JsonString}` : response.data[0].url;
+		transformedImage.src = base64JsonString
+			? `data:image/png;base64,${base64JsonString}`
+			: response.data[0].url;
 
-		timeoutId = setTimeout(() =>{
+		timeoutId = setTimeout(() => {
 			setReceivedImage(transformedImage.src);
 			console.log("Delaying image url assignment");
 		}, 1000);
@@ -156,69 +169,129 @@ export const App = () => {
 		});
 	};
 
+	const showCreate = () => {};
+
 	return (
 		<div className={styles.scrollContainer}>
-			<Rows spacing="1u">
-				<Title size="large">Canvas-To-AI</Title>
-				<Text>
-					Turn your imagination into beautiful artwork. Drag Canva elements onto
-					the page that capture your idea, and let us handle the rest.
-				</Text>
-				<Title size="medium">Transformation Styles</Title>
-				<Switch
-					value={enabledSwitch === ""}
-					label="No style"
-					description="We'll take it from here."
-					onChange={() => setEnabledSwitch("")}
-				/>
-				<Switch
-					value={enabledSwitch === "cartoon"}
-					label="Cartoon-y"
-					description="A style the kids will love. Perfect for kids books!"
-					onChange={() => setEnabledSwitch("cartoon")}
-				/>
-				<Switch
-					value={enabledSwitch === "oil-painting"}
-					label="Oil Painting"
-					description="Fancy~! Might want to hang this on the wall after."
-					onChange={() => setEnabledSwitch("oil-painting")}
-				/>
-				<Switch
-					value={enabledSwitch === "simple-pencil-sketch"}
-					label="Pencil Sketch"
-					description="Want to practice drawing? Get an idea by tracing the image out."
-					onChange={() => setEnabledSwitch("simple-pencil-sketch")}
-				/>
+			{showMenu && (
+				<Rows spacing="1u">
+					<Title size="large">Magic Transform</Title>
+					<Text>
+						Turn your imagination into beautiful artwork. Drag Canva elements
+						onto the page that capture your idea, and let us handle the rest.
+					</Text>
+					<Title size="medium">Transformation Styles</Title>
 
-				<Title size="medium">Aspect Ratio</Title>
-				<Switch
-					value={imageAspectRatio === "square"}
-					label="Square"
-					description="1024 x 1024"
-					onChange={() => setImageAspectRatio("square")}
-				/>
-				<Switch
-					value={imageAspectRatio === "landscape"}
-					label="Landscape"
-					description="1792 x 1024"
-					onChange={() => setImageAspectRatio("landscape")}
-				/>
-				<Switch
-					value={imageAspectRatio === "portrait"}
-					label="Portrait"
-					description="1024 x 1792"
-					onChange={() => setImageAspectRatio("portrait")}
-				/>
+					<Grid alignX="center" alignY="center" columns={3} spacing="1u">
+						<ImageCard
+							ariaLabel="No style image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("")}
+							selectable={true}
+							selected={enabledSwitch === ""}
+							thumbnailUrl={nostyle}
+						/>
+						<ImageCard
+							ariaLabel="Cartoon-y image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("cartoon")}
+							selectable={true}
+							selected={enabledSwitch === "cartoon"}
+							thumbnailUrl={cartoon}
+						/>
+						<ImageCard
+							ariaLabel="Oil painting image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("oil-painting")}
+							selectable={true}
+							selected={enabledSwitch === "oil-painting"}
+							thumbnailHeight={96}
+							thumbnailUrl={oilpaint}
+						/>
+						<Title size="xsmall">No Style</Title>
+						<Title size="xsmall">Cartoon-y</Title>
+						<Title size="xsmall">Oil Painting</Title>
+						<ImageCard
+							ariaLabel="Oil painting image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("photo realistic")}
+							selectable={true}
+							selected={enabledSwitch === "photo realistic"}
+							thumbnailHeight={96}
+							thumbnailUrl={realistic}
+						/>
+						<ImageCard
+							ariaLabel="Pencil sketch image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("simple-pencil-sketch")}
+							selectable={true}
+							selected={enabledSwitch === "simple-pencil-sketch"}
+							thumbnailHeight={96}
+							thumbnailUrl={pencil}
+						/>
+						<ImageCard
+							ariaLabel="Anime image"
+							borderRadius="standard"
+							onClick={() => setEnabledSwitch("anime")}
+							selectable={true}
+							selected={enabledSwitch === "anime"}
+							thumbnailHeight={96}
+							thumbnailUrl={anime}
+						/>
+						<Title size="xsmall">Realistic</Title>
+						<Title size="xsmall">Pencil Sketch</Title>
+						<Title size="xsmall">Anime</Title>
+					</Grid>
 
-				<Button
-					variant="primary"
-					onClick={exportDocument}
-					loading={state === "exporting"}
-				>
-					Transform
-				</Button>
-			</Rows>
-			{exportResponse && receivedImage==="" ? <TransformProgressBar duration={10} transformJobComplete={transformJobComplete}></TransformProgressBar> : null}
+					<Title size="medium">Aspect Ratio</Title>
+					<Grid alignX="center" alignY="center" columns={3} spacing="1u">
+						<ImageCard
+							ariaLabel="Square ratio"
+							borderRadius="standard"
+							onClick={() => setImageAspectRatio("square")}
+							selectable={true}
+							selected={imageAspectRatio === "square"}
+							thumbnailUrl={square}
+						/>
+						<ImageCard
+							ariaLabel="Landscape ratio"
+							borderRadius="standard"
+							onClick={() => setImageAspectRatio("landscape")}
+							selectable={true}
+							selected={imageAspectRatio === "landscape"}
+							thumbnailUrl={landscape}
+						/>
+						<ImageCard
+							ariaLabel="Portrait ratio"
+							borderRadius="standard"
+							onClick={() => setImageAspectRatio("portrait")}
+							selectable={true}
+							selected={imageAspectRatio === "portrait"}
+							thumbnailHeight={96}
+							thumbnailUrl={portrait}
+						/>
+
+						<Title size="xsmall">Square</Title>
+						<Title size="xsmall">Landscape</Title>
+						<Title size="xsmall">Portrait</Title>
+					</Grid>
+
+					<Button
+						variant="primary"
+						onClick={exportDocument}
+						loading={state === "exporting"}
+					>
+						Transform
+					</Button>
+				</Rows>
+			)}
+
+			{exportResponse && receivedImage === "" ? (
+				<TransformProgressBar
+					duration={10}
+					transformJobComplete={transformJobComplete}
+				></TransformProgressBar>
+			) : null}
 			{receivedImage !== "" && (
 				<Rows spacing="1u">
 					<Title size="small">External Image</Title>
@@ -238,6 +311,11 @@ export const App = () => {
 						onDragStart={onDragStartForExternalImage}
 					/>
 					{/* <Text>{receivedImage}</Text> */}
+					{!showMenu && (
+						<Button variant="primary" onClick={() => setShowMenu(true)}>
+							Return
+						</Button>
+					)}
 				</Rows>
 			)}
 		</div>
