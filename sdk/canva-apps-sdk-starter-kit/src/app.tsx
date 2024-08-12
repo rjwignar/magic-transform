@@ -329,7 +329,7 @@ export const App = () => {
 					transformJobComplete={transformJobComplete}
 				></TransformProgressBar>
 			) : null}
-			{receivedImage !== "" && showMenu === false && (
+			{receivedImage !== "" && transformJobComplete === true && (
 				<Rows spacing="1u">
 					<Title size="small">External Image</Title>
 					<Text>
@@ -349,7 +349,13 @@ export const App = () => {
 					/>
 					{/* <Text>{receivedImage}</Text> */}
 					{!showMenu && (
-						<Button variant="primary" onClick={() => setShowMenu(true)}>
+						<Button
+							variant="primary"
+							onClick={() => {
+								setShowMenu(true);
+								setTransformJobComplete(false);
+							}}
+						>
 							Return
 						</Button>
 					)}
