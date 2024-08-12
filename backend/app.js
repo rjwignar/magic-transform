@@ -47,12 +47,8 @@ app.post('/api/transform', async (req, res) =>{
         ['portrait', '1024x1792']
     ]);
     const imageSize = aspectRatioSizes.get(aspectRatio);
-    let imagePrompt = `Create an image that matches the following description:
-    ${description}.`;
-    if (style) {
-        imagePrompt += `The image is created in a(n) ${style} style.`
-    }
-    // console.log("Original prompt", imagePrompt);
+    let imagePrompt = style ? `A(n) ${style} illustration that matches the following description:\n${description}` : description;
+    // console.log("Image prompt", imagePrompt);
     let transformedImage;
     if (process.env.NODE_ENV === 'test'){
         // Return sample response
