@@ -45,13 +45,24 @@ export const App = () => {
 	let timeoutId: undefined | ReturnType<typeof setTimeout>;
 	// Uploads image to Canva's 'Uploads' library for the user's future use
 	const uploadExternalImage = () => {
+		var width, height;
+		if (imageAspectRatio === "square") {
+			width = 1024;
+			height = 1024;
+		} else if (imageAspectRatio === "landscape") {
+			width = 1792;
+			height = 1024;
+		} else if (imageAspectRatio === "portrait") {
+			width = 1024;
+			height = 1792;
+		}
 		return upload({
 			mimeType: "image/png",
 			thumbnailUrl: receivedImage,
 			type: "IMAGE",
 			url: receivedImage,
-			width: 320,
-			height: 212,
+			width: width,
+			height: height,
 		});
 	};
 
@@ -63,17 +74,28 @@ export const App = () => {
 
 	// Adds functionality to upload dragged image to Canva's 'Uploads' library
 	const onDragStartForExternalImage = (event: React.DragEvent<HTMLElement>) => {
+		var width, height;
+		if (imageAspectRatio === "square") {
+			width = 1024;
+			height = 1024;
+		} else if (imageAspectRatio === "landscape") {
+			width = 1792;
+			height = 1024;
+		} else if (imageAspectRatio === "portrait") {
+			width = 1024;
+			height = 1792;
+		}
 		ui.startDrag(event, {
 			type: "IMAGE",
 			resolveImageRef: uploadExternalImage,
 			previewUrl: receivedImage,
 			previewSize: {
-				width: 320,
-				height: 212,
+				width: width,
+				height: height,
 			},
 			fullSize: {
-				width: 320,
-				height: 212,
+				width: width,
+				height: height,
 			},
 		});
 	};
@@ -163,13 +185,24 @@ export const App = () => {
 			console.log("Delaying image url assignment");
 		}, 1000);
 		// setReceivedImage(response.data[0].url);
+		var width, height;
+		if (imageAspectRatio === "square") {
+			width = 1024;
+			height = 1024;
+		} else if (imageAspectRatio === "landscape") {
+			width = 1792;
+			height = 1024;
+		} else if (imageAspectRatio === "portrait") {
+			width = 1024;
+			height = 1792;
+		}
 		const image = await upload({
 			type: "IMAGE",
 			mimeType: "image/png",
 			url: transformedImage.src,
 			thumbnailUrl: transformedImage.src,
-			width: 540,
-			height: 720,
+			width: width,
+			height: height,
 		});
 	};
 
@@ -296,7 +329,7 @@ export const App = () => {
 					transformJobComplete={transformJobComplete}
 				></TransformProgressBar>
 			) : null}
-			{receivedImage !== "" && (
+			{receivedImage !== "" && showMenu === false && (
 				<Rows spacing="1u">
 					<Title size="small">External Image</Title>
 					<Text>
