@@ -7,6 +7,11 @@ import { OpenAI, AzureOpenAI } from "openai";
 const apiVersion = "2024-05-01-preview";
 const client = (process.env.AOAI_KEY) ? new AzureOpenAI({ apiKey: process.env.AOAI_KEY, apiVersion: apiVersion, endpoint: process.env.AOAI_ENDPOINT }) : new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+function whatClient(){
+    (client instanceof AzureOpenAI) ?
+    console.log('Azure Deployment called') :
+    console.log("OpenAI API called");
+}
 // Deployment (model) names on Azure OpenAI Service (as of openai Version 4.52.7)
 const describingDeploymentName = "omni";
 const imageGenerationDeploymentName = "imageGeneration";
@@ -22,9 +27,7 @@ const describePrompt = `Return a description of this image that can be used to a
                         Do not include references to any style the image might have.
                         Start your description with 'The image depicts'`;
 export async function describeImage(imageURL) {
-    (client instanceof AzureOpenAI) ?
-        console.log('Azure Deployment called') :
-        console.log("OpenAI API called");
+    whatClient();
     const res = await client.chat.completions.create({
         model: textModel,
         max_tokens: 200,
@@ -48,9 +51,7 @@ export async function describeImage(imageURL) {
 }
 
 export async function transformImage(imagePrompt, imageSize) {
-    (client instanceof AzureOpenAI) ?
-    console.log('Azure Deployment called') :
-    console.log("OpenAI API called");
+    whatClient();
     const res = await client.images.generate({
         model: imageModel,
         style: "vivid",
