@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.send({ "status": "ready" });
 });
 
-function handleJSONParseError(error){
+function handleJSONParseError(error) {
     // Print original error to console
     console.error(`Encountered '${error.errno}': ${error}`);
     // Assign status of 500 and obfuscate original error so it's not exposed to frontend
@@ -33,9 +33,9 @@ app.post('/api/describe', async (req, res) => {
         let response;
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
-            try{
+            try {
                 response = JSON.parse(readFileSync('samples/describeSample.json'));
-            } catch(error){
+            } catch (error) {
                 handleJSONParseError(error);
             }
         }
@@ -69,9 +69,9 @@ app.post('/api/transform', async (req, res) => {
         let transformedImage;
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
-            try{
+            try {
                 transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
-            } catch(error){
+            } catch (error) {
                 handleJSONParseError(error);
             }
         }
