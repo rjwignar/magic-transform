@@ -48,6 +48,7 @@ export async function describeImage(imageURL) {
             ],
         });
         return res;
+
     } catch (error) {
         error.message = `OpenAI API Error: ${error.message}`
         console.error(error.message);
@@ -57,13 +58,19 @@ export async function describeImage(imageURL) {
 
 export async function transformImage(imagePrompt, imageSize) {
     whatClient();
-    const res = await client.images.generate({
-        model: imageModel,
-        style: "vivid",
-        size: imageSize,
-        prompt: imagePrompt,
-        response_format: "b64_json",
-    });
+    try {
+        const res = await client.images.generate({
+            model: imageModel,
+            style: "vivid",
+            size: imageSize,
+            prompt: imagePrompt,
+            response_format: "b64_json",
+        });
+        return res;
 
-    return res;
+    } catch (error) {
+        error.message = `OpenAI API Error: ${error.message}`
+        console.error(error.message);
+        throw error;
+    }
 }
