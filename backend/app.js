@@ -25,7 +25,14 @@ app.post('/api/describe', async (req, res) => {
         let response;
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
-            response = JSON.parse(readFileSync('samples/describeSample.json'));
+            try{
+                response = JSON.parse(readFileSync('samples/describeSample.json'));
+            } catch(error){
+                console.error(`Encountered '${error.errno}': ${error}`);
+                error.message = `Internal Server Error`;
+                error.status = 500;
+                throw error;
+            }
         }
         else if (process.env.NODE_ENV === 'production') {
             // Pass imageURL to OpenAI Omni (GPT-4o)
