@@ -7,6 +7,11 @@ import { OpenAI, AzureOpenAI } from "openai";
 const apiVersion = "2024-05-01-preview";
 const client = (process.env.AOAI_KEY) ? new AzureOpenAI({ apiKey: process.env.AOAI_KEY, apiVersion: apiVersion, endpoint: process.env.AOAI_ENDPOINT }) : new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+function handleOpenAIError(error){
+    error.message = `OpenAI API Error: ${error.message}`
+    console.error(error.message);
+    throw error;
+}
 function whatClient() {
     (client instanceof AzureOpenAI) ?
         console.log('Azure Deployment called') :
@@ -50,9 +55,7 @@ export async function describeImage(imageURL) {
         return res;
 
     } catch (error) {
-        error.message = `OpenAI API Error: ${error.message}`
-        console.error(error.message);
-        throw error;
+        handleOpenAIError(error);
     }
 }
 
@@ -69,8 +72,6 @@ export async function transformImage(imagePrompt, imageSize) {
         return res;
 
     } catch (error) {
-        error.message = `OpenAI API Error: ${error.message}`
-        console.error(error.message);
-        throw error;
+        handleOpenAIError(error);
     }
 }
