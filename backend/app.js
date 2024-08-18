@@ -10,7 +10,7 @@ app.use(cors({
     origin: process.env.CANVA_APP_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     headers: ['Content-Type', 'Authorization']
-  }));
+}));
 // Health probe endpoint
 app.get('/', (req, res) => {
     res.send({ "status": "ready" });
@@ -23,25 +23,25 @@ app.post('/api/describe', async (req, res) => {
         // const imageURL = `https://www.shutterstock.com/shutterstock/photos/2292916287/display_1500/stock-photo-two-business-people-a-business-man-and-a-business-woman-engage-in-a-discussion-as-they-read-a-2292916287.jpg`;
         const imageURL = req.body.imageURL;
         let response;
-        if (process.env.NODE_ENV === 'test'){
+        if (process.env.NODE_ENV === 'test') {
             // Return sample response
             response = JSON.parse(readFileSync('samples/describeSample.json'));
         }
-        else if (process.env.NODE_ENV === 'production'){
+        else if (process.env.NODE_ENV === 'production') {
             // Pass imageURL to OpenAI Omni (GPT-4o)
             response = await describeImage(imageURL);
         }
         // console.log(response);
         res.json(response);
     }
-    catch(err){
-        console.log("Error in app.js", err);
+    catch (error) {
+        res.status(error.status).send({ message: error.message });
     }
 })
 
 // POST /api/transform
 // Takes image description and creates a new image out of it.
-app.post('/api/transform', async (req, res) =>{
+app.post('/api/transform', async (req, res) => {
     const description = req.body.imageDescription;
     const style = req.body.imageStyle;
     const aspectRatio = req.body.imageAspectRatio;
@@ -53,19 +53,23 @@ app.post('/api/transform', async (req, res) =>{
     const imageSize = aspectRatioSizes.get(aspectRatio);
     let imagePrompt = style ? `A(n) ${style} illustration that matches the following description:\n${description}` : description;
     // console.log("Image prompt", imagePrompt);
-    let transformedImage;
-    if (process.env.NODE_ENV === 'test'){
-        // Return sample response
-        transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
-    }
-    else if (process.env.NODE_ENV === 'production'){
-        // Pass imagePrompt to OpenAI DALL-E-3
-        transformedImage = await transformImage(imagePrompt, imageSize);
-    }
-    // console.log("New image response: ", transformedImage);
+    try {
+        let transformedImage;
+        if (process.env.NODE_ENV === 'test') {
+            // Return sample response
+            transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
+        }
+        else if (process.env.NODE_ENV === 'production') {
+            // Pass imagePrompt to OpenAI DALL-E-3
+            transformedImage = await transformImage(imagePrompt, imageSize);
+        }
+        // console.log("New image response: ", transformedImage);
 
-    // return image URL
-    res.json(transformedImage);
+        // return image URL
+        res.json(transformedImage);
+    } catch (error) {
+        res.status(error.status).send({ message: error.message });
+    }
 });
 
 // parse out hosting port from cmd arguments if passed in
