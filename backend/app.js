@@ -28,7 +28,9 @@ app.post('/api/describe', async (req, res) => {
             try{
                 response = JSON.parse(readFileSync('samples/describeSample.json'));
             } catch(error){
+                // Print original error to console
                 console.error(`Encountered '${error.errno}': ${error}`);
+                // Assign status of 500 and obfuscate original error so it's not exposed to frontend
                 error.message = `Internal Server Error`;
                 error.status = 500;
                 throw error;
@@ -64,7 +66,16 @@ app.post('/api/transform', async (req, res) => {
         let transformedImage;
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
-            transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
+            try{
+                transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
+            } catch(error){
+                // Print original error to console
+                console.error(`Encountered '${error.errno}': ${error}`);
+                // Assign status of 500 and obfuscate original error so it's not exposed to frontend
+                error.message = `Internal Server Error`;
+                error.status = 500;
+                throw error;
+            }
         }
         else if (process.env.NODE_ENV === 'production') {
             // Pass imagePrompt to OpenAI DALL-E-3
