@@ -16,6 +16,14 @@ app.get('/', (req, res) => {
     res.send({ "status": "ready" });
 });
 
+function handleJSONParseError(error){
+    // Print original error to console
+    console.error(`Encountered '${error.errno}': ${error}`);
+    // Assign status of 500 and obfuscate original error so it's not exposed to frontend
+    error.message = `Internal Server Error`;
+    error.status = 500;
+    throw error;
+}
 // Takes image URL and describes 
 // POST /api/describe
 app.post('/api/describe', async (req, res) => {
@@ -28,12 +36,7 @@ app.post('/api/describe', async (req, res) => {
             try{
                 response = JSON.parse(readFileSync('samples/describeSample.json'));
             } catch(error){
-                // Print original error to console
-                console.error(`Encountered '${error.errno}': ${error}`);
-                // Assign status of 500 and obfuscate original error so it's not exposed to frontend
-                error.message = `Internal Server Error`;
-                error.status = 500;
-                throw error;
+                handleJSONParseError(error);
             }
         }
         else if (process.env.NODE_ENV === 'production') {
@@ -69,12 +72,7 @@ app.post('/api/transform', async (req, res) => {
             try{
                 transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
             } catch(error){
-                // Print original error to console
-                console.error(`Encountered '${error.errno}': ${error}`);
-                // Assign status of 500 and obfuscate original error so it's not exposed to frontend
-                error.message = `Internal Server Error`;
-                error.status = 500;
-                throw error;
+                handleJSONParseError(error);
             }
         }
         else if (process.env.NODE_ENV === 'production') {
