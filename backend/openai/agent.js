@@ -7,10 +7,10 @@ import { OpenAI, AzureOpenAI } from "openai";
 const apiVersion = "2024-05-01-preview";
 const client = (process.env.AOAI_KEY) ? new AzureOpenAI({ apiKey: process.env.AOAI_KEY, apiVersion: apiVersion, endpoint: process.env.AOAI_ENDPOINT }) : new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-function whatClient(){
+function whatClient() {
     (client instanceof AzureOpenAI) ?
-    console.log('Azure Deployment called') :
-    console.log("OpenAI API called");
+        console.log('Azure Deployment called') :
+        console.log("OpenAI API called");
 }
 // Deployment (model) names on Azure OpenAI Service (as of openai Version 4.52.7)
 const describingDeploymentName = "omni";
@@ -28,26 +28,31 @@ const describePrompt = `Return a description of this image that can be used to a
                         Start your description with 'The image depicts'`;
 export async function describeImage(imageURL) {
     whatClient();
-    const res = await client.chat.completions.create({
-        model: textModel,
-        max_tokens: 200,
-        messages: [
-            {
-                role: "user",
-                content: [
-                    { type: "text", text: describePrompt },
-                    {
-                        type: "image_url",
-                        image_url: {
-                            "url": imageURL
+    try {
+        const res = await client.chat.completions.create({
+            model: textModel,
+            max_tokens: 200,
+            messages: [
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: describePrompt },
+                        {
+                            type: "image_url",
+                            image_url: {
+                                "url": imageURL
+                            },
                         },
-                    },
-                ],
-            },
-        ],
-    });
-
-    return res;
+                    ],
+                },
+            ],
+        });
+        return res;
+    } catch (error) {
+        error.message = `OpenAI API Error: ${error.message}`
+        console.error(error.message);
+        throw error;
+    }
 }
 
 export async function transformImage(imagePrompt, imageSize) {
