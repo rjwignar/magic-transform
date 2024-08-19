@@ -5,8 +5,12 @@ import { describeImage, transformImage } from "./openai/agent.js";
 import { readFileSync } from "node:fs";
 const app = express();
 app.use(express.json());
-app.use(cors());
-
+// CORS configuration
+app.use(cors({
+    origin: process.env.CANVA_APP_ORIGIN,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    headers: ['Content-Type', 'Authorization']
+  }));
 // Health probe endpoint
 app.get('/', (req, res) => {
     res.send({ "status": "ready" });
