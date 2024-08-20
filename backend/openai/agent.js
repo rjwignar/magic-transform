@@ -1,6 +1,6 @@
 import "dotenv/config.js";
 import { OpenAI, AzureOpenAI } from "openai";
-
+import logger from "../logger.js"
 // setup OpenAI client (OpenAI or Azure OpenAI)
 // apiVersion required for AzureOpenAI, refer to 
 // For AzureOpenAI, deployment is not a requirement, but you must use the appropriate deployment name as the 'model' property in the endpoint calls
@@ -9,13 +9,13 @@ const client = (process.env.AOAI_KEY) ? new AzureOpenAI({ apiKey: process.env.AO
 
 function handleOpenAIError(error) {
     error.message = `OpenAI API Error: ${error.message}`
-    console.error(error.message);
+    logger.error(error.message);
     throw error;
 }
 function whatClient() {
     (client instanceof AzureOpenAI) ?
-        console.log('Azure Deployment called') :
-        console.log("OpenAI API called");
+        logger.info('Azure Deployment called') :
+        logger.info("OpenAI API called");
 }
 // Deployment (model) names on Azure OpenAI Service (as of openai Version 4.52.7)
 const describingDeploymentName = "omni";
