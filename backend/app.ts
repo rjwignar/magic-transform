@@ -7,11 +7,12 @@ import logger from "./logger.js";
 const app = express();
 app.use(express.json());
 // CORS configuration
-app.use(cors({
+const corsOptions: cors.CorsOptions = {
     origin: process.env.CANVA_APP_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    headers: ['Content-Type', 'Authorization']
-}));
+    allowedHeaders: ['Content-Type', 'Authorization'] // I'm unsure about changing headers to allowedHeaders
+}
+app.use(cors(corsOptions));
 // Health probe endpoint
 app.get('/', (req, res) => {
     res.send({ "status": "ready" });
