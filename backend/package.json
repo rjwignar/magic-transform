@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node --env-file=.env app.ts"
+  },
   "dependencies": {
     "@azure/openai": "^2.0.0-beta.1",
     "cors": "^2.8.5",
