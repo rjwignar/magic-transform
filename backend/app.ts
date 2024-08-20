@@ -36,7 +36,7 @@ app.post('/api/describe', async (req, res) => {
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
             try {
-                response = JSON.parse(readFileSync('samples/describeSample.json'));
+                response = JSON.parse(readFileSync('samples/describeSample.json', 'utf-8'));
             } catch (error) {
                 handleJSONParseError(error);
             }
@@ -48,7 +48,7 @@ app.post('/api/describe', async (req, res) => {
         logger.debug(response);
         res.json(response);
     }
-    catch (error) {
+    catch (error: any) {
         res.status(error.status).send({ message: error.message });
     }
 })
