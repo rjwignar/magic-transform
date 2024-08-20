@@ -93,8 +93,8 @@ app.post('/api/transform', async (req, res) => {
 
 // parse out hosting port from cmd arguments if passed in
 // otherwise default to port 4242
-var port = (() => {
-    var port = 4242; // default
+const port = (() => {
+    let port = 4242; // default
     if (argv) {
         argv.forEach((v, i) => {
             if (v && (v.toLowerCase().startsWith('port='))) {
