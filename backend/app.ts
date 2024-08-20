@@ -4,6 +4,7 @@ import { argv } from 'node:process';
 import { describeImage, transformImage } from "./openai/agent.js";
 import { readFileSync } from "node:fs";
 import logger from "./logger.js";
+import { ImageGenerateParams } from "openai/resources/images.js";
 const app = express();
 app.use(express.json());
 // CORS configuration
@@ -64,7 +65,7 @@ app.post('/api/transform', async (req, res) => {
         ['landscape', '1792x1024'],
         ['portrait', '1024x1792']
     ]);
-    const imageSize = aspectRatioSizes.get(aspectRatio);
+    const imageSize = aspectRatioSizes.get(aspectRatio) as ImageGenerateParams['size'];
     let imagePrompt = style ? `A(n) ${style} illustration that matches the following description:\n${description}` : description;
     logger.debug("Image prompt: %s", imagePrompt);
     try {
@@ -72,7 +73,7 @@ app.post('/api/transform', async (req, res) => {
         if (process.env.NODE_ENV === 'test') {
             // Return sample response
             try {
-                transformedImage = JSON.parse(readFileSync('samples/transformSample.json'));
+                transformedImage = JSON.parse(readFileSync('samples/transformSample.json', 'utf-8'));
             } catch (error) {
                 handleJSONParseError(error);
             }
@@ -85,7 +86,7 @@ app.post('/api/transform', async (req, res) => {
 
         // return image URL
         res.json(transformedImage);
-    } catch (error) {
+    } catch (error: any) {
         res.status(error.status).send({ message: error.message });
     }
 });
