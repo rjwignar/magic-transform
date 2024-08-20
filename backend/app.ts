@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
     res.send({ "status": "ready" });
 });
 
-function handleJSONParseError(error) {
+function handleJSONParseError(error: Error | any) {
     // Print original error to console
     logger.error(`Encountered '${error.errno}': ${error}`);
     // Assign status of 500 and obfuscate original error so it's not exposed to frontend
