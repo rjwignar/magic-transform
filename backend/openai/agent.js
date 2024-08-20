@@ -10,7 +10,7 @@ const client = (process.env.AOAI_KEY) ? new AzureOpenAI({ apiKey: process.env.AO
 
 function handleOpenAIError(error) {
     error.message = `OpenAI API Error: ${error.message}`
-    console.error(error.message);
+    logger.error(error.message);
     throw error;
 }
 function whatClient() {
