@@ -1,7 +1,6 @@
 import "dotenv/config.js";
 import { OpenAI, AzureOpenAI } from "openai";
-import pino from "pino";
-const logger = pino();
+import logger from "../logger.js"
 // setup OpenAI client (OpenAI or Azure OpenAI)
 // apiVersion required for AzureOpenAI, refer to 
 // For AzureOpenAI, deployment is not a requirement, but you must use the appropriate deployment name as the 'model' property in the endpoint calls

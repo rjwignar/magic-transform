@@ -3,8 +3,7 @@ import cors from "cors";
 import { argv } from 'node:process';
 import { describeImage, transformImage } from "./openai/agent.js";
 import { readFileSync } from "node:fs";
-import pino from "pino";
-const logger = pino();
+import logger from "./logger.js";
 const app = express();
 app.use(express.json());
 // CORS configuration
