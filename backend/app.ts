@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { argv } from 'node:process';
-import { describeImage, transformImage } from "./openai/agent.js";
+import { describeImage, transformImage } from "./openai/agent";
 import { readFileSync } from "node:fs";
 import logger from "./logger.js";
-import { ImageGenerateParams } from "openai/resources/images.js";
+import { ImageGenerateParams } from "openai/resources/images";
 const app = express();
 app.use(express.json());
 // CORS configuration
