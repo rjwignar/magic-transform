@@ -3,6 +3,8 @@ import cors from "cors";
 import { argv } from 'node:process';
 import { describeImage, transformImage } from "./openai/agent.js";
 import { readFileSync } from "node:fs";
+import pino from "pino";
+const logger = pino();
 const app = express();
 app.use(express.json());
 // CORS configuration
@@ -18,7 +20,7 @@ app.get('/', (req, res) => {
 
 function handleJSONParseError(error) {
     // Print original error to console
-    console.error(`Encountered '${error.errno}': ${error}`);
+    logger.error(`Encountered '${error.errno}': ${error}`);
     // Assign status of 500 and obfuscate original error so it's not exposed to frontend
     error.message = `Internal Server Error`;
     error.status = 500;
@@ -43,7 +45,7 @@ app.post('/api/describe', async (req, res) => {
             // Pass imageURL to OpenAI Omni (GPT-4o)
             response = await describeImage(imageURL);
         }
-        // console.log(response);
+        logger.debug(response);
         res.json(response);
     }
     catch (error) {
@@ -64,7 +66,7 @@ app.post('/api/transform', async (req, res) => {
     ]);
     const imageSize = aspectRatioSizes.get(aspectRatio);
     let imagePrompt = style ? `A(n) ${style} illustration that matches the following description:\n${description}` : description;
-    // console.log("Image prompt", imagePrompt);
+    logger.debug("Image prompt: %s", imagePrompt);
     try {
         let transformedImage;
         if (process.env.NODE_ENV === 'test') {
@@ -79,7 +81,7 @@ app.post('/api/transform', async (req, res) => {
             // Pass imagePrompt to OpenAI DALL-E-3
             transformedImage = await transformImage(imagePrompt, imageSize);
         }
-        // console.log("New image response: ", transformedImage);
+        logger.debug("New image response: %j", transformedImage);
 
         // return image URL
         res.json(transformedImage);
@@ -103,5 +105,5 @@ var port = (() => {
 })();
 
 app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+    logger.info(`Server started on port ${port}`);
 });
