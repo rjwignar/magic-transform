@@ -98,7 +98,7 @@ var port = (() => {
     if (argv) {
         argv.forEach((v, i) => {
             if (v && (v.toLowerCase().startsWith('port='))) {
-                port = v.substring(5);
+                port = parseInt(v.substring(5), 10);
             }
         });
     }
