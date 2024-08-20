@@ -8,5 +8,9 @@
     "pino": "^9.3.2",
     "pino-pretty": "^11.2.2"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21"
+  }
 }
